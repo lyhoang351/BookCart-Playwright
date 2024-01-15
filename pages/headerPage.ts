@@ -1,15 +1,12 @@
 import { Page } from '@playwright/test';
+import BaseFunction from '../configs/baseFunctions';
 export default class HeaderPage {
-    constructor(private page: Page) {
-        this.page = page;
-    }
+    constructor(private page: Page, private base: BaseFunction) {}
     private elements = {
         loginButton: '//button[.="Login"]',
     };
 
     clickOnLoginButton = async () => {
-        const button = this.page.locator(this.elements.loginButton);
-        await button.waitFor({ state: 'attached' });
-        await button.click();
+        await this.base.waitForVisibleAndClick(this.elements.loginButton);
     };
 }
