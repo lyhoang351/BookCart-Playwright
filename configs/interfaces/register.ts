@@ -13,5 +13,5 @@ export type RegisterFormDataType = {
     username?: string;
     password?: string;
     confirmPassword?: string;
-    gender?: RegisterGenderType;
+    gender?: string;
 };

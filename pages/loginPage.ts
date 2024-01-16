@@ -2,7 +2,10 @@ import { Page } from '@playwright/test';
 import BaseFunction from '../configs/baseFunctions';
 
 export default class LoginPage {
-    constructor(private page: Page, private base: BaseFunction) {}
+    private base: BaseFunction;
+    constructor(private page: Page) {
+        this.base = new BaseFunction(page);
+    }
 
     private elements = {
         usernameInput: '#mat-input-2',
@@ -15,7 +18,7 @@ export default class LoginPage {
     };
 
     async clickOnRegisterButton() {
-        await this.base.waitForVisibleAndClick(this.elements.loginButton);
+        await this.base.waitForVisibleAndClick(this.elements.registerButton);
     }
     async enterUsername(username: string) {
         await this.page.fill(this.elements.usernameInput, username);

@@ -1,7 +1,10 @@
 import { Page } from '@playwright/test';
 import BaseFunction from '../configs/baseFunctions';
 export default class HeaderPage {
-    constructor(private page: Page, private base: BaseFunction) {}
+    private base: BaseFunction;
+    constructor(private page: Page) {
+        this.base = new BaseFunction(page);
+    }
     private elements = {
         loginButton: '//button[.="Login"]',
     };
