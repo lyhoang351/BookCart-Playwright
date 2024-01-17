@@ -1,5 +1,6 @@
 import { Page } from '@playwright/test';
 import BaseFunction from '../configs/baseFunctions';
+import { LoginCredentialDataType } from '../configs/interfaces/login';
 
 export default class LoginPage {
     private base: BaseFunction;
@@ -8,15 +9,19 @@ export default class LoginPage {
     }
 
     private elements = {
-        usernameInput: '#mat-input-2',
-        passwordInput: '#mat-input-3',
+        usernameInput: '//input[@formcontrolname ="username"]',
+        passwordInput: '//input[@formcontrolname ="password"]',
         passwordVisibilityIcon:
             '//input[@id="mat-input-3"]/parent::div/following-sibling::div/mat-icon',
         loginButton: '//form//button[.="Login"]',
         registerButton: '//button[.="Register"]',
+        errorInput: '//input[contains(@class, "ng-invalid")]',
         errorMessage: 'mat-error',
     };
 
+    async goto() {
+        await this.page.goto('/login');
+    }
     async clickOnRegisterButton() {
         await this.base.waitForVisibleAndClick(this.elements.registerButton);
     }
@@ -29,7 +34,8 @@ export default class LoginPage {
     async clickOnLoginButton() {
         await this.base.waitForVisibleAndClick(this.elements.loginButton);
     }
-    async login(username: string = '', password: string = '') {
+    async login(credential: LoginCredentialDataType) {
+        const { username, password } = credential;
         await this.enterUsername(username);
         await this.enterPassword(password);
         await this.clickOnLoginButton();
@@ -45,7 +51,11 @@ export default class LoginPage {
         }
     }
 
-    getErrorMessage() {
-        return this.page.locator('mat-error');
+    async getErrorMessage() {
+        return await this.page.locator(this.elements.errorMessage);
+    }
+
+    async getErrorInput() {
+        return await this.page.locator(this.elements.errorInput);
     }
 }

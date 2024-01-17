@@ -13,7 +13,7 @@ async function registerUser(page) {
     await registerPage.register({ ...user, username });
     await page.waitForTimeout(2000);
     await registerPage.clickOnRegisterButton();
-    await expect(await (await registerPage.getInvalidInput()).count()).toBe(0);
+    await expect(await (await registerPage.getErrorInput()).count()).toBe(0);
     await page.waitForURL(/.+login/);
 
     return { ...user, username };
@@ -41,7 +41,7 @@ test('Register failed when missing data in form', async ({ page }) => {
     const register = new RegisterPage(page);
     await register.clickOnRegisterButton();
     await expect(
-        await (await register.getInvalidInput()).count()
+        await (await register.getErrorInput()).count()
     ).toBeGreaterThan(0);
 });
 test('Register failed when missing gender', async ({ page }) => {
@@ -64,7 +64,7 @@ test('Register failed when inputting invalid username', async ({ page }) => {
     await page.waitForTimeout(2000);
     await registerPage.clickOnRegisterButton();
     await expect(
-        await (await registerPage.getInvalidInput()).count()
+        await (await registerPage.getErrorInput()).count()
     ).toBeGreaterThan(0);
     await expect(await (await registerPage.getErrorMessage()).count()).toBe(1);
     await page.waitForTimeout(2000);
@@ -83,7 +83,7 @@ test('Register failed when inputting mismatched confirm password', async ({
     await page.waitForTimeout(2000);
     await registerPage.clickOnRegisterButton();
     await expect(
-        await (await registerPage.getInvalidInput()).count()
+        await (await registerPage.getErrorInput()).count()
     ).toBeGreaterThan(0);
     await expect(await (await registerPage.getErrorMessage()).count()).toBe(1);
     await expect(

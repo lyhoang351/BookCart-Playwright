@@ -19,7 +19,7 @@ export default class RegisterPage {
         loginButton: '//div[@class="container"]//button[.="Login"]',
         registerButton: '//button[.="Register"]',
         errorMessage: '//mat-error',
-        invalidInput: '//input[contains(@class, "ng-invalid")]',
+        errorInput: '//input[contains(@class, "ng-invalid")]',
     };
 
     async goto() {
@@ -59,7 +59,7 @@ export default class RegisterPage {
         return await this.page.locator(this.elements.errorMessage);
     }
 
-    async getInvalidInput() {
-        return await this.page.locator(this.elements.invalidInput);
+    async getErrorInput() {
+        return await this.page.locator(this.elements.errorInput);
     }
 }
