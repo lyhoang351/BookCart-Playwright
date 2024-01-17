@@ -14,7 +14,7 @@ export default defineConfig({
     reporter: [['html', { open: 'on-failure' }]],
 
     use: {
-        // baseURL: 'http://127.0.0.1:3000',
+        baseURL: 'https://bookcart.azurewebsites.net/',
 
         trace: 'on-first-retry',
         video: 'retain-on-failure',

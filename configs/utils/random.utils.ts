@@ -5,9 +5,10 @@ export const randomUsername = async () => {
     const response = await fetch(
         `https://bookcart.azurewebsites.net/api/User/validateUserName/${username}`
     );
-    if ((await response.json()) === 'false') {
+    const value = await response.json();
+    if (value === false) {
         return username;
     } else {
-        return randomUsername();
+        return await randomUsername();
     }
 };

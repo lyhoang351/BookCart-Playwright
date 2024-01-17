@@ -22,6 +22,10 @@ export default class RegisterPage {
         invalidInput: '//input[contains(@class, "ng-invalid")]',
     };
 
+    async goto() {
+        await this.page.goto('/register');
+    }
+
     async clickOnLoginButton() {
         await this.base.waitForVisibleAndClick(this.elements.loginButton);
     }
@@ -46,7 +50,9 @@ export default class RegisterPage {
                 Object.values(inputData)[i]
             );
         }
-        await this.page.click(this.elements.genderSelector(gender));
+        if (gender !== '') {
+            await this.page.click(this.elements.genderSelector(gender));
+        }
     }
 
     async getErrorMessage() {
