@@ -1,5 +1,5 @@
 import { Page } from '@playwright/test';
-import BaseFunction from '../configs/baseFunctions';
+import BaseFunction from '../configs/utils/baseFunctions';
 import { LoginCredentialDataType } from '../configs/interfaces/login';
 
 export default class LoginPage {

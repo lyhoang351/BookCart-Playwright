@@ -10,3 +10,4 @@ export const REGISTER_GENDER_VALUE = {
     MALE: 'Male',
     FEMALE: 'Female',
 };
+
