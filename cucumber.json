@@ -1,0 +1,11 @@
+{
+    "default": {
+        "formatOptions": {
+            "snippetInterface": "async-await"
+        },
+        "path": ["features/"],
+        "dryRun": false,
+        "require": ["features/step_definitions/*.ts"],
+        "requireModule": ["ts-node/register"]
+    }
+}

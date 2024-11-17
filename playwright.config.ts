@@ -11,10 +11,18 @@ export default defineConfig({
 
     workers: process.env.CI ? 1 : undefined,
 
-    reporter: [['html', { open: 'on-failure' }]],
+    reporter: [
+        ['html'],
+        [
+            'allure-playwright',
+            {
+                resultsDir: 'allure-results',
+            },
+        ],
+    ],
 
     use: {
-        baseURL: 'https://bookcart.azurewebsites.net/',
+        baseURL: process.env.BASE_URL,
 
         trace: 'on-first-retry',
         video: 'retain-on-failure',

@@ -1,15 +1,16 @@
-import { Page } from '@playwright/test';
+import { expect, test, Page } from '@playwright/test';
 import {
     RegisterFormDataType,
     RegisterFormFieldType,
     RegisterGenderType,
 } from '../configs/interfaces/register';
-import BaseFunction from '../configs/baseFunctions';
+import { BasePage } from './basePage';
+import { randomUsername } from '../configs/utils/random.utils';
+import user from '../configs/testData/registerUser.json';
 
-export default class RegisterPage {
-    private base: BaseFunction;
-    constructor(private page: Page) {
-        this.base = new BaseFunction(page);
+export default class RegisterPage extends BasePage {
+    constructor(page: Page) {
+        super(page);
     }
     private elements = {
         registerInput: (formField: string) =>
@@ -23,15 +24,15 @@ export default class RegisterPage {
     };
 
     async goto() {
-        await this.page.goto('/register');
+        await super.goto('/register');
     }
 
     async clickOnLoginButton() {
-        await this.base.waitForVisibleAndClick(this.elements.loginButton);
+        await this.waitForVisibleAndClick(this.elements.loginButton);
     }
 
     async clickOnRegisterButton() {
-        await this.base.waitForVisibleAndClick(this.elements.registerButton);
+        await super.waitForVisibleAndClick(this.elements.registerButton);
     }
 
     async enterInput(field: RegisterFormFieldType, value: string) {
@@ -44,14 +45,15 @@ export default class RegisterPage {
 
     async register(data: RegisterFormDataType) {
         const { gender = '', ...inputData } = data;
-        for (let i = 0; i < Object.keys(inputData).length; i++) {
-            await this.page.fill(
-                this.elements.registerInput(Object.keys(inputData)[i]),
-                Object.values(inputData)[i]
-            );
+        for (let [key, value] of Object.entries(inputData)) {
+            await test.step(`And fill in ${key} input`, async () => {
+                await this.page.fill(this.elements.registerInput(key), value);
+            });
         }
         if (gender !== '') {
-            await this.page.click(this.elements.genderSelector(gender));
+            await test.step(`And click on ${gender}`, async () => {
+                await this.page.click(this.elements.genderSelector(gender));
+            });
         }
     }
 
@@ -61,5 +63,18 @@ export default class RegisterPage {
 
     async getErrorInput() {
         return await this.page.locator(this.elements.errorInput);
+    }
+
+    async registerUser() {
+        const username = randomUsername();
+        await this.register({ ...user, username });
+        await this.page.waitForTimeout(2000);
+
+        await test.step('And click on Register button', async () => {
+            await this.clickOnRegisterButton();
+        });
+        await this.page.waitForURL(/.+login/);
+
+        return { ...user, username };
     }
 }

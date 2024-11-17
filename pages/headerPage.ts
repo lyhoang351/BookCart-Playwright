@@ -1,11 +1,12 @@
 import { Page } from '@playwright/test';
 import BaseFunction from '../configs/utils/baseFunctions';
 import { el } from '@faker-js/faker';
-export default class HeaderPage {
-    private base: BaseFunction;
-    constructor(private page: Page) {
-        this.base = new BaseFunction(page);
+import { BasePage } from './basePage';
+export default class HeaderPage extends BasePage {
+    constructor(page: Page) {
+        super(page);
     }
+
     private elements = {
         brandTitleButton: '//div[@class="brand-title"]/button',
         searchInput: '//input[@placeholder="Search books or authors"]',
@@ -15,8 +16,8 @@ export default class HeaderPage {
         changeThemeButton:
             '//button[@mattooltip="Select a theme for the site"]',
         changeThemeOptions: '//div[@id="cdk-overlay-14"]//button',
-        loginButton: '//button[.="Login"]',
-        userButton: `//button[contains(., "account_circle")]`,
+        loginButton: '//button[normalize-space()="Login"]',
+        usernameText: `//mat-toolbar//mat-icon[normalize-space() = 'account_circle']//following-sibling::span[@class='mdc-button__label']`,
         logoutButton: '//button[text()="Logout"]',
         myOrdersButton: '//button[text()="My Orders"]',
     };
@@ -43,15 +44,15 @@ export default class HeaderPage {
     }
 
     clickOnLoginButton = async () => {
-        await this.base.waitForVisibleAndClick(this.elements.loginButton);
+        await this.waitForVisibleAndClick(this.elements.loginButton);
     };
 
     async getCurrentUser() {
-        const userButtonText = await this.page.locator(
-            this.elements.userButton
+        const usernameText = await this.page.locator(
+            this.elements.usernameText
         );
-        console.log('userButtonText', await userButtonText);
-        const text = await userButtonText?.textContent({ timeout: 3000 });
+        console.log('userButtonText', await usernameText);
+        const text = await usernameText?.textContent({ timeout: 3000 });
         return text?.split(' ')[1];
     }
 }
