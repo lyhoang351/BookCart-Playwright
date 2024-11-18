@@ -1,7 +1,8 @@
-import { expect, Page } from '@playwright/test';
+import { test, expect, Page, TestInfo } from '@playwright/test';
 
 export abstract class BasePage {
-    constructor(protected page: Page) {}
+    private countSS: number = 1;
+    constructor(protected page: Page, protected testInfo?: TestInfo) {}
 
     async goto(url: string) {
         await this.page.goto(url);
@@ -11,6 +12,24 @@ export abstract class BasePage {
         await element.waitFor({ state: 'visible' });
         await element.click();
         await this.page.waitForTimeout(1000);
+    }
+
+    async takeScreenShot() {
+        const name = this.testInfo?.title.toLowerCase().split(' ').join('-');
+        const path = `screenshots/${name}/${name}-${this.countSS.toString()}.png`;
+
+        await this.page.waitForTimeout(1000);
+        await test.step('Then take screenshot', async () => {
+            const screenshot = await this.page.screenshot({
+                fullPage: true,
+                path: path,
+            });
+            this.countSS++;
+            await this.testInfo?.attach('screenshot', {
+                body: screenshot,
+                contentType: 'image/png',
+            });
+        });
     }
 
     async getErrorMessage(element: string) {

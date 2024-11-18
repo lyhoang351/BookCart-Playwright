@@ -1,10 +1,10 @@
-import { Page } from '@playwright/test';
+import { Page, TestInfo } from '@playwright/test';
 import BaseFunction from '../configs/utils/baseFunctions';
 import { el } from '@faker-js/faker';
 import { BasePage } from './basePage';
 export default class HeaderPage extends BasePage {
-    constructor(page: Page) {
-        super(page);
+    constructor(page: Page, testInfo?: TestInfo) {
+        super(page, testInfo);
     }
 
     private elements = {

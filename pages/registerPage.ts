@@ -1,4 +1,4 @@
-import { expect, test, Page } from '@playwright/test';
+import { expect, test, Page, TestInfo } from '@playwright/test';
 import {
     RegisterFormDataType,
     RegisterFormFieldType,
@@ -9,8 +9,8 @@ import { randomUsername } from '../configs/utils/random.utils';
 import user from '../configs/testData/registerUser.json';
 
 export default class RegisterPage extends BasePage {
-    constructor(page: Page) {
-        super(page);
+    constructor(page: Page, testInfo: TestInfo) {
+        super(page, testInfo);
     }
     private elements = {
         registerInput: (formField: string) =>
@@ -33,6 +33,7 @@ export default class RegisterPage extends BasePage {
 
     async clickOnRegisterButton() {
         await super.waitForVisibleAndClick(this.elements.registerButton);
+        await this.takeScreenShot();
     }
 
     async enterInput(field: RegisterFormFieldType, value: string) {
@@ -70,6 +71,7 @@ export default class RegisterPage extends BasePage {
         await this.register({ ...user, username });
         await this.page.waitForTimeout(2000);
 
+        await this.takeScreenShot();
         await test.step('And click on Register button', async () => {
             await this.clickOnRegisterButton();
         });

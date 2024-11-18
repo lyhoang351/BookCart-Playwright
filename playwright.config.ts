@@ -1,4 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+
+dotenv.config({
+    path: '.env',
+});
 
 export default defineConfig({
     testDir: './tests',
@@ -13,12 +18,12 @@ export default defineConfig({
 
     reporter: [
         ['html'],
-        [
-            'allure-playwright',
-            {
-                resultsDir: 'allure-results',
-            },
-        ],
+        // [
+        //     'allure-playwright',
+        //     {
+        //         resultsDir: 'allure-results',
+        //     },
+        // ],
     ],
 
     use: {
@@ -26,7 +31,7 @@ export default defineConfig({
 
         trace: 'on-first-retry',
         video: 'retain-on-failure',
-        screenshot: 'only-on-failure',
+        screenshot: 'on',
         ignoreHTTPSErrors: true,
     },
 

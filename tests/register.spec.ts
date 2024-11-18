@@ -25,12 +25,15 @@ import registerPage from '../pages/registerPage';
 //     await pageAssert.assertUrlContain('register');
 // });
 
-test.only('Register successfully', async ({ page }) => {
-    const register = new RegisterPage(page);
-
+test('Register successfully', async ({ page }, testInfo) => {
+    const register = new RegisterPage(page, testInfo);
+    console.log('testInfo.title', testInfo);
     await test.step('Given navigate to register page', async () => {
         await register.goto();
     });
+
+    await register.takeScreenShot();
+
     await test.step('When register new user', async () => {
         await register.registerUser();
     });
@@ -38,40 +41,52 @@ test.only('Register successfully', async ({ page }) => {
     await test.step('Then verify that URL contains "login"', async () => {
         await register.assertUrlContain('login');
     });
+
+    await register.takeScreenShot();
 });
-test.describe.skip('Register failed', () => {
+test.describe('Register failed', () => {
     test.describe.configure({ mode: 'parallel' });
-    test('When missing data in form', async ({ page }) => {
-        const register = new RegisterPage(page);
+    test('When missing data in form', async ({ page }, testInfo) => {
+        const register = new RegisterPage(page, testInfo);
         await register.goto();
+        await register.takeScreenShot();
+
         await register.clickOnRegisterButton();
         await expect(
             await (await register.getErrorInput()).count()
         ).toBeGreaterThan(0);
+        await register.takeScreenShot();
     });
-    test('When missing gender', async ({ page }) => {
-        const register = new RegisterPage(page);
+
+    test('When missing gender', async ({ page }, testInfo) => {
+        const register = new RegisterPage(page, testInfo);
         await register.goto();
+        await register.takeScreenShot();
 
         const username = await randomUsername();
         const { gender, ...data } = user;
         await register.register({ ...data, username });
         await page.waitForTimeout(2000);
+        await register.takeScreenShot();
+
         await register.clickOnRegisterButton();
+        await register.takeScreenShot();
 
         await page.waitForTimeout(2000);
         expect(page.url()).not.toContain('login');
     });
-    test('When inputting existed username', async ({ page }) => {
-        const register = new RegisterPage(page);
-        const login = new LoginPage(page);
+    test('When inputting existed username', async ({ page }, testInfo) => {
+        const register = new RegisterPage(page, testInfo);
         await register.goto();
+        await register.takeScreenShot();
 
         const username = credential.username;
         await register.register({ ...user, username });
         await page.waitForTimeout(2000);
+        await register.takeScreenShot();
 
         await register.clickOnRegisterButton();
+        await register.takeScreenShot();
 
         const errorInput = await register.getErrorInput();
         await expect(await errorInput.count()).toBeGreaterThan(0);
@@ -83,8 +98,10 @@ test.describe.skip('Register failed', () => {
         expect(page.url()).not.toContain('login');
     });
 
-    test('When inputting mismatched confirm password', async ({ page }) => {
-        const register = new RegisterPage(page);
+    test('When inputting mismatched confirm password', async ({
+        page,
+    }, testInfo) => {
+        const register = new RegisterPage(page, testInfo);
         await register.goto();
 
         const username = await randomUsername();
@@ -110,8 +127,8 @@ test.describe.skip('Register failed', () => {
     });
 });
 
-test('Go to login page successfully', async ({ page }) => {
-    const register = new RegisterPage(page);
+test('Go to login page successfully', async ({ page }, testInfo) => {
+    const register = new RegisterPage(page, testInfo);
     await register.goto();
 
     await register.clickOnLoginButton();

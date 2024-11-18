@@ -6,8 +6,8 @@ import { randomUsername } from '../configs/utils/random.utils';
 import { LOGIN_ERROR_MESSAGE } from '../configs/constants/error.constants';
 
 
-test('Go to Register Page successfully', async ({ page }) => {
-    const loginPage = new LoginPage(page);
+test('Go to Register Page successfully', async ({ page }, testInfo) => {
+    const loginPage = new LoginPage(page, testInfo);
 
     loginPage.goto();
     await loginPage.clickOnRegisterButton();
@@ -15,9 +15,9 @@ test('Go to Register Page successfully', async ({ page }) => {
     await expect(page).toHaveURL(/.+register/);
 });
 
-test('Login successfully', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    const header = new HeaderPage(page);
+test('Login successfully', async ({ page }, testInfo) => {
+    const loginPage = new LoginPage(page, testInfo);
+    const header = new HeaderPage(page, testInfo);
 
     await loginPage.goto();
 
@@ -32,8 +32,8 @@ test('Login successfully', async ({ page }) => {
 test.describe('Login failed', () => {
     test.describe.configure({ mode: 'parallel' });
 
-    test('When missing username', async ({ page }) => {
-        const loginPage = new LoginPage(page);
+    test('When missing username', async ({ page }, testInfo) => {
+        const loginPage = new LoginPage(page, testInfo);
 
         await loginPage.goto();
         await loginPage.login({ username: '', password: credential.password });
@@ -45,8 +45,8 @@ test.describe('Login failed', () => {
         );
     });
 
-    test('When missing password', async ({ page }) => {
-        const loginPage = new LoginPage(page);
+    test('When missing password', async ({ page }, testInfo) => {
+        const loginPage = new LoginPage(page, testInfo);
 
         loginPage.goto();
         await loginPage.login({ username: credential.username, password: '' });
@@ -58,8 +58,8 @@ test.describe('Login failed', () => {
         );
     });
 
-    test('When inputting incorrect credential', async ({ page }) => {
-        const loginPage = new LoginPage(page);
+    test('When inputting incorrect credential', async ({ page }, testInfo) => {
+        const loginPage = new LoginPage(page, testInfo);
 
         loginPage.goto();
         const newUsername = await randomUsername();
