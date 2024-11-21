@@ -56,6 +56,11 @@ npx playwright install
 npm run test --ENV="stag"
 ```
 
+- Run tests matching "customer"
+```JS
+npx playwright test --grep "customer"
+```
+
 3. For Allure Report generation execute :
 
 ```JS
