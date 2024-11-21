@@ -2,7 +2,6 @@ import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 
 let environment = process.env.ENV || 'prod';
-console.log(environment);
 dotenv.config({
   path: `.env.${environment}`,
   override: true

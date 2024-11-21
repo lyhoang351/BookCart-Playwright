@@ -6,7 +6,8 @@
     "scripts": {
         "test": "npx playwright test --headed",
         "test::formal": "npx playwright test --headed",
-        "test::cucumber": "cucumber-js test --config cucumber.json"
+        "test::cucumber": "cucumber-js test --config cucumber.json",
+        "report": "allure serve allure-results"
     },
     "repository": {
         "type": "git",

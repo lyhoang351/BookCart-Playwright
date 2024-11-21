@@ -1,4 +1,4 @@
-import { Page, TestInfo } from '@playwright/test';
+import { test, Page, TestInfo } from '@playwright/test';
 import BaseFunction from '../configs/utils/baseFunctions';
 import { el } from '@faker-js/faker';
 import { BasePage } from './basePage';
@@ -17,7 +17,7 @@ export default class HeaderPage extends BasePage {
             '//button[@mattooltip="Select a theme for the site"]',
         changeThemeOptions: '//div[@id="cdk-overlay-14"]//button',
         loginButton: '//button[normalize-space()="Login"]',
-        usernameText: `//mat-toolbar//mat-icon[normalize-space() = 'account_circle']//following-sibling::span[@class='mdc-button__label']`,
+        usernameText: `//mat-toolbar//mat-icon[normalize-space() = 'account_circle']//following-sibling::span[@class='mdc-button__label']//span`,
         logoutButton: '//button[text()="Logout"]',
         myOrdersButton: '//button[text()="My Orders"]',
     };
@@ -33,26 +33,33 @@ export default class HeaderPage extends BasePage {
     }
 
     async clickOnCart() {
-        await this.page.click(this.elements.cartButton);
+        await await this.page.click(this.elements.cartButton);
     }
 
     async getNumberOfItemsInCart() {
-        const cartContent = await this.page
-            .locator(this.elements.cartButton)
-            .innerText();
-        return cartContent.split('\n')[1];
+        await test.step('Get number of Items in Cart', async () => {
+            const cartContent = await this.page
+                .locator(this.elements.cartButton)
+                .innerText();
+            return cartContent.split('\n')[1];
+        });
     }
 
     clickOnLoginButton = async () => {
-        await this.waitForVisibleAndClick(this.elements.loginButton);
+        await test.step('Click on Login button on the header', async () => {
+            await this.waitForVisibleAndClick(this.elements.loginButton);
+        });
     };
 
     async getCurrentUser() {
-        const usernameText = await this.page.locator(
-            this.elements.usernameText
-        );
-        console.log('userButtonText', await usernameText);
-        const text = await usernameText?.textContent({ timeout: 3000 });
-        return text?.split(' ')[1];
+        await test.step('Get Current username', async () => {
+            const usernameText = await this.page.locator(
+                this.elements.usernameText
+            );
+
+            const text = await usernameText?.textContent({ timeout: 3000 });
+            console.log('text', text);
+            return text?.trim();
+        });
     }
 }

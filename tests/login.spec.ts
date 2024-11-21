@@ -1,82 +1,104 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../hooks/fixture';
 import LoginPage from '../pages/loginPage';
 import credential from '../configs/testData/loginUser.json';
 import HeaderPage from '../pages/headerPage';
 import { randomUsername } from '../configs/utils/random.utils';
 import { LOGIN_ERROR_MESSAGE } from '../configs/constants/error.constants';
 
+test('Go to Register Page successfully', async ({ page, login }, testInfo) => {
+    await login.goto();
+    await login.takeScreenShot();
 
-test('Go to Register Page successfully', async ({ page }, testInfo) => {
-    const loginPage = new LoginPage(page, testInfo);
+    await login.clickOnRegisterButton();
+    await login.takeScreenShot();
 
-    loginPage.goto();
-    await loginPage.clickOnRegisterButton();
     await page.waitForTimeout(2000);
-    await expect(page).toHaveURL(/.+register/);
+    await test.step('Verify that URL contains "register"', async () => {
+        await expect(page).toHaveURL(/.+register/);
+    });
 });
 
-test('Login successfully', async ({ page }, testInfo) => {
-    const loginPage = new LoginPage(page, testInfo);
-    const header = new HeaderPage(page, testInfo);
+test('Login successfully', async ({ page, login, header }, testInfo) => {
+    await login.goto();
+    await login.takeScreenShot();
 
-    await loginPage.goto();
-
-    await loginPage.login({ ...credential });
+    await login.login({ ...credential });
     await page.waitForTimeout(3000);
-    expect(page.url()).not.toContain('login');
 
+    await login.takeScreenShot();
+    await test.step('Verify that URL does NOT contain "login"', async () => {
+        expect(page.url()).not.toContain('login');
+    });
+
+    await page.waitForTimeout(3000);
     const loggedUsername = await header.getCurrentUser();
-    expect(loggedUsername).toBe(credential.username);
+    await test.step('Verify that current username is displayed correctly', async () => {
+        expect(loggedUsername).toBe(credential.username);
+    });
 });
 
 test.describe('Login failed', () => {
     test.describe.configure({ mode: 'parallel' });
 
-    test('When missing username', async ({ page }, testInfo) => {
-        const loginPage = new LoginPage(page, testInfo);
+    test('When missing username', async ({ page, login }, testInfo) => {
+        await login.goto();
+        await login.takeScreenShot();
 
-        await loginPage.goto();
-        await loginPage.login({ username: '', password: credential.password });
+        await login.login({ username: '', password: credential.password });
 
-        await loginPage.assertErrorInputEqual(loginPage.elements.errorInput, 1);
-        await loginPage.assertErrorMessageEqual(
-            loginPage.elements.errorMessage,
-            LOGIN_ERROR_MESSAGE.REQUIRED_USERNAME
-        );
+        await test.step('Verify that number of error input is 1', async () => {
+            await login.assertErrorInputEqual(login.elements.errorInput, 1);
+        });
+        await test.step('Verify that error message show correctly', async () => {
+            await login.assertErrorMessageEqual(
+                login.elements.errorMessage,
+                LOGIN_ERROR_MESSAGE.REQUIRED_USERNAME
+            );
+        });
+        await login.takeScreenShot();
     });
 
-    test('When missing password', async ({ page }, testInfo) => {
-        const loginPage = new LoginPage(page, testInfo);
+    test('When missing password', async ({ page, login }, testInfo) => {
+        await login.goto();
+        await login.takeScreenShot();
 
-        loginPage.goto();
-        await loginPage.login({ username: credential.username, password: '' });
+        await login.login({ username: credential.username, password: '' });
 
-        await loginPage.assertErrorInputEqual(loginPage.elements.errorInput, 1);
-        await loginPage.assertErrorMessageEqual(
-            loginPage.elements.errorMessage,
-            LOGIN_ERROR_MESSAGE.REQUIRED_PASSWORD
-        );
+        await test.step('Verify that number of error input is 1', async () => {
+            await login.assertErrorInputEqual(login.elements.errorInput, 1);
+        });
+        await test.step('Verify that error message show correctly', async () => {
+            await login.assertErrorMessageEqual(
+                login.elements.errorMessage,
+                LOGIN_ERROR_MESSAGE.REQUIRED_PASSWORD
+            );
+        });
+        await login.takeScreenShot();
     });
 
-    test('When inputting incorrect credential', async ({ page }, testInfo) => {
-        const loginPage = new LoginPage(page, testInfo);
+    test('When inputting incorrect credential', async ({ page, login }) => {
+        await login.goto();
+        await login.takeScreenShot();
 
-        loginPage.goto();
         const newUsername = await randomUsername();
-        await loginPage.login({
+        await login.login({
             username: newUsername,
             password: 'wrongPassword',
         });
         await page.waitForTimeout(3000);
 
-        await loginPage.assertErrorInputGreaterThan(
-            loginPage.elements.errorInput,
-            0
-        );
-        await loginPage.assertErrorMessageEqual(
-            loginPage.elements.errorMessage,
-            LOGIN_ERROR_MESSAGE.INVALID_CREDENTIAL
-        );
+        await test.step('Verify that number of error input is greater than 0', async () => {
+            await login.assertErrorInputGreaterThan(
+                login.elements.errorInput,
+                0
+            );
+        });
+        await test.step('Verify that error message show correctly', async () => {
+            await login.assertErrorMessageEqual(
+                login.elements.errorMessage,
+                LOGIN_ERROR_MESSAGE.INVALID_CREDENTIAL
+            );
+        });
+        await login.takeScreenShot();
     });
 });
-
