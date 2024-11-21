@@ -16,16 +16,16 @@ export abstract class BasePage {
 
     async takeScreenShot() {
         const name = this.testInfo?.title.toLowerCase().split(' ').join('-');
-        const path = `screenshots/${name}/${name}-${this.countSS.toString()}.png`;
-
-        await this.page.waitForTimeout(1000);
-        await test.step('Then take screenshot', async () => {
+        const screenshotName = `${name}-${this.countSS.toString()}.png`;
+        const path = `screenshots/${name}/${screenshotName}`;
+        await test.step('And take screenshot', async () => {
             const screenshot = await this.page.screenshot({
                 fullPage: true,
                 path: path,
+                timeout: 1000
             });
             this.countSS++;
-            await this.testInfo?.attach('screenshot', {
+            await this.testInfo?.attach(screenshotName, {
                 body: screenshot,
                 contentType: 'image/png',
             });

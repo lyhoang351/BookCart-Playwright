@@ -17,7 +17,8 @@ export default defineConfig({
     workers: process.env.CI ? 1 : undefined,
 
     reporter: [
-        ['html'],
+        ['html', { open: 'never' }],
+        ["allure-playwright"]
         // [
         //     'allure-playwright',
         //     {
@@ -29,9 +30,9 @@ export default defineConfig({
     use: {
         baseURL: process.env.BASE_URL,
 
-        trace: 'on-first-retry',
+        trace: 'off',
         video: 'retain-on-failure',
-        screenshot: 'on',
+        screenshot: 'only-on-failure',
         ignoreHTTPSErrors: true,
     },
 
