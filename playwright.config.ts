@@ -1,8 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 
+let environment = process.env.ENV || 'prod';
+console.log(environment);
 dotenv.config({
-    path: '.env',
+  path: `.env.${environment}`,
+  override: true
 });
 
 export default defineConfig({
@@ -17,7 +20,8 @@ export default defineConfig({
     workers: process.env.CI ? 1 : undefined,
 
     reporter: [
-        ['html'],
+        ['html', { open: 'never' }],
+        ["allure-playwright"]
         // [
         //     'allure-playwright',
         //     {
@@ -29,9 +33,9 @@ export default defineConfig({
     use: {
         baseURL: process.env.BASE_URL,
 
-        trace: 'on-first-retry',
+        trace: 'off',
         video: 'retain-on-failure',
-        screenshot: 'on',
+        screenshot: 'only-on-failure',
         ignoreHTTPSErrors: true,
     },
 

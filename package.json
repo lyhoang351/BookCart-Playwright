@@ -22,14 +22,16 @@
     "devDependencies": {
         "@cucumber/cucumber": "^11.0.1",
         "@faker-js/faker": "^8.3.1",
-        "@playwright/test": "^1.48.2",
+        "@playwright/test": "^1.49.0",
         "@types/node": "^20.11.0",
         "allure-playwright": "^3.0.6",
         "ts-node": "^10.9.2",
-        "typescript": "^5.6.3"
+        "typescript": "^5.6.3",
+        "allure-commandline": "^2.32.0"
     },
     "dependencies": {
         "allure-commandline": "^2.32.0",
-        "dotenv": "^16.4.5"
+        "dotenv": "^16.4.5",
+        "playwright": "^1.49.0"
     }
 }
