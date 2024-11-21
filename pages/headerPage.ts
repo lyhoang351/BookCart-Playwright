@@ -33,11 +33,11 @@ export default class HeaderPage extends BasePage {
     }
 
     async clickOnCart() {
-        await await this.page.click(this.elements.cartButton);
+        await this.page.click(this.elements.cartButton);
     }
 
     async getNumberOfItemsInCart() {
-        await test.step('Get number of Items in Cart', async () => {
+        return await test.step('Get number of Items in Cart', async () => {
             const cartContent = await this.page
                 .locator(this.elements.cartButton)
                 .innerText();
@@ -52,14 +52,12 @@ export default class HeaderPage extends BasePage {
     };
 
     async getCurrentUser() {
-        await test.step('Get Current username', async () => {
-            const usernameText = await this.page.locator(
+        return await test.step('Get Current username', async () => {
+            const usernameText = this.page.locator(
                 this.elements.usernameText
             );
 
-            const text = await usernameText?.textContent({ timeout: 3000 });
-            console.log('text', text);
-            return text?.trim();
+            return await usernameText?.textContent({ timeout: 3000 });
         });
     }
 }
